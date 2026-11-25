@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d12" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>TOMORROW X ALIVE — 학원 좀비 서바이벌 미연시</title>
+  <link rel="stylesheet" href="css/style.css?v=20261125a" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <!-- Noise & Scanline Atmosphere -->
+    <div class="fx-grain" aria-hidden="true"></div>
+    <div class="fx-vignette" id="fx-vignette" aria-hidden="true"></div>
+
+    <!-- ================= TITLE SCREEN ================= -->
+    <section id="screen-title" class="screen screen-title active" aria-label="타이틀 화면">
+      <div id="title-bg" class="bg-layer"></div>
+      <div class="title-overlay">
+        <div class="title-badge-row">
+          <span class="tape-tag">SEALED CAMPUS · DAY 01</span>
+          <span class="signal-dot"><i class="dot-live"></i>FREQ 109.4 MHz</span>
+        </div>
+
+        <div class="title-hero">
+          <p class="title-kicker">POST-APOCALYPSE SCHOOL ROMANCE</p>
+          <h1 class="title-logo">
+            <span class="logo-top">TOMORROW</span>
+            <span class="logo-x">X</span>
+            <span class="logo-bottom">ALIVE</span>
+          </h1>
+          <p class="title-sub">봉쇄된 학교, 무너진 일상 속에서<br />내일을 함께할 단 한 사람을 지켜내라</p>
+        </div>
+
+        <div class="title-cast-strip" id="title-cast-strip" aria-label="공략 캐릭터 미리보기"></div>
+
+        <nav class="title-menu" aria-label="메인 메뉴">
+          <button id="btn-new-game" class="btn-punk btn-primary" type="button">
+            <span class="btn-icon">▶</span>
+            <span>NEW GAME</span>
+            <small>처음부터 시작</small>
+          </button>
+          <button id="btn-continue" class="btn-punk btn-secondary" type="button" disabled>
+            <span class="btn-icon">↻</span>
+            <span>CONTINUE</span>
+            <small id="continue-meta">저장 기록 없음</small>
+          </button>
+          <div class="title-menu-row">
+            <button id="btn-title-load" class="btn-punk btn-ghost" type="button">💾 LOAD</button>
+            <button id="btn-title-gallery" class="btn-punk btn-ghost" type="button">📷 MEMORY</button>
+            <button id="btn-title-sound" class="btn-punk btn-ghost" type="button">🔊 SFX ON</button>
+          </div>
+        </nav>
+
+        <footer class="title-footer">
+          <span>TXT SURVIVAL OTOME PROTOTYPE</span>
+          <span>DESKTOP &amp; MOBILE READY</span>
+        </footer>
+      </div>
+    </section>
+
+    <!-- ================= GAME SCREEN ================= -->
+    <section id="screen-game" class="screen screen-game" aria-label="게임 플레이 화면">
+      <!-- Top Survival HUD -->
+      <header class="hud-bar">
+        <div class="hud-left">
+          <div class="hud-day-pill" id="hud-day">DAY 1 · 낮</div>
+          <div class="hud-loc-pill" id="hud-location">학교 복도</div>
+        </div>
+        <div class="hud-stats">
+          <div class="stat-chip stat-mental" title="멘탈 수치 (0이 되면 패닉 상태)">
+            <span class="stat-label">🧠</span>
+            <div class="stat-bar-track">
+              <div class="stat-bar-fill" id="hud-mental-bar" style="width: 80%"></div>
+            </div>
+            <span class="stat-val" id="hud-mental-val">80</span>
+          </div>
+          <div class="stat-chip stat-supply" title="생존 물자 (방어전 및 이벤트에 사용)">
+            <span class="stat-label">🎒</span>
+            <span class="stat-val" id="hud-supply-val">3</span>
+          </div>
+        </div>
+        <div class="hud-actions">
+          <button id="btn-notebook" class="hud-icon-btn" type="button" title="생존 노트 & 호감도">📓</button>
+          <button id="btn-backlog" class="hud-icon-btn" type="button" title="대화 로그">📜</button>
+          <button id="btn-save-menu" class="hud-icon-btn" type="button" title="저장 / 불러오기">💾</button>
+          <button id="btn-sound" class="hud-icon-btn" type="button" title="효과음 켜기/끄기">🔊</button>
+          <button id="btn-home" class="hud-icon-btn" type="button" title="타이틀로">🏠</button>
+        </div>
+      </header>
+
+      <!-- Visual Novel Stage -->
+      <main id="vn-stage" class="vn-stage">
+        <div id="scene-bg" class="bg-layer"></div>
+        <div id="scene-tint" class="scene-tint"></div>
+
+        <!-- Character Layer -->
+        <div id="character-layer" class="character-layer">
+          <div id="char-slot" class="char-slot"></div>
+        </div>
+
+        <!-- Floating Toasts (Affection / Stat changes) -->
+        <div id="toast-layer" class="toast-layer" aria-live="polite"></div>
+
+        <!-- Cracked Smartphone / Walkie-Talkie Radio Overlay -->
+        <div id="radio-banner" class="radio-banner hidden" role="status">
+          <div class="radio-glass-crack" aria-hidden="true"></div>
+          <div class="radio-header">
+            <span class="radio-live"><i class="dot-live"></i> 교내 무전기 수신 중</span>
+            <span class="radio-freq" id="radio-sender-tag">CH-04</span>
+          </div>
+          <div class="radio-wave" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <!-- QTE Countdown Banner -->
+        <div id="qte-banner" class="qte-banner hidden" role="alert">
+          <div class="qte-top">
+            <span class="qte-title">⚠ 위기 발생 · 제한 시간 내 선택!</span>
+            <span class="qte-timer" id="qte-timer-text">8.0s</span>
+          </div>
+          <div class="qte-track">
+            <div class="qte-fill" id="qte-fill" style="width: 100%"></div>
+          </div>
+        </div>
+
+        <!-- School Map Exploration Overlay -->
+        <div id="map-overlay" class="overlay-panel hidden" aria-label="학교 구역 탐색">
+          <div class="overlay-card map-card">
+            <div class="overlay-head">
+              <div>
+                <p class="overlay-kicker" id="map-kicker">DAY 1 · 낮 자유 탐색</p>
+                <h2 class="overlay-title">어느 구역으로 향할까?</h2>
+              </div>
+              <div class="ap-badge" id="map-ap-badge">남은 행동 2 / 2</div>
+            </div>
+            <p class="map-hint">구역을 선택해 물자를 확보하고, 그곳을 지키는 멤버와 1:1 시간을 보내세요.</p>
+            <div id="map-grid" class="map-grid"></div>
+          </div>
+        </div>
+
+        <!-- Night Watch Partner Selection Overlay -->
+        <div id="night-overlay" class="overlay-panel hidden" aria-label="야간 불침번 파트너 선택">
+          <div class="overlay-card night-card">
+            <div class="overlay-head">
+              <div>
+                <p class="overlay-kicker" id="night-kicker">DAY 1 · 심야 불침번</p>
+                <h2 class="overlay-title">오늘 밤, 누구와 옥상을 지킬까?</h2>
+              </div>
+            </div>
+            <p class="map-hint">단둘이 나누는 심야 대화를 통해 호감도가 크게 오르고, 스페셜 폴라로이드가 해금됩니다.</p>
+            <div id="night-grid" class="night-grid"></div>
+          </div>
+        </div>
+
+        <!-- Choice Container -->
+        <div id="choice-layer" class="choice-layer hidden" role="group" aria-label="선택지"></div>
+
+        <!-- Dialogue Box -->
+        <div id="dialogue-box" class="dialogue-box" role="button" tabindex="0" aria-label="다음 대사로 진행">
+          <div class="tape-strip tape-left" aria-hidden="true"></div>
+          <div class="tape-strip tape-right" aria-hidden="true"></div>
+          <div class="dialogue-meta">
+            <span id="speaker-name" class="speaker-name hidden">수빈</span>
+            <span id="speaker-role" class="speaker-role hidden">학생회장</span>
+          </div>
+          <p id="dialogue-text" class="dialogue-text"></p>
+          <div class="dialogue-footer">
+            <span class="dialogue-tip">탭 / 클릭 / Space</span>
+            <span id="dialogue-next" class="dialogue-next">▼</span>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- ================= ENDING SCREEN ================= -->
+    <section id="screen-ending" class="screen screen-ending" aria-label="엔딩 화면">
+      <div id="ending-bg" class="bg-layer"></div>
+      <div class="ending-card">
+        <span class="tape-tag" id="ending-type-tag">TRUE ENDING</span>
+        <div class="polaroid-frame ending-polaroid" id="ending-polaroid">
+          <div class="polaroid-photo" id="ending-photo"></div>
+          <div class="polaroid-caption" id="ending-caption">TOMORROW X ALIVE</div>
+        </div>
+        <h2 class="ending-title" id="ending-title">엔딩 제목</h2>
+        <p class="ending-desc" id="ending-desc"></p>
+        <div class="ending-stats" id="ending-stats"></div>
+        <div class="ending-actions">
+          <button id="btn-ending-gallery" class="btn-punk btn-ghost" type="button">📷 폴라로이드 앨범</button>
+          <button id="btn-ending-title" class="btn-punk btn-primary" type="button">↻ 타이틀로 돌아가기</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= MODALS ================= -->
+    <!-- Name Input Modal -->
+    <div id="modal-name" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-name-title">
+      <div class="modal-backdrop" data-close="modal-name"></div>
+      <div class="modal-box modal-compact">
+        <span class="tape-tag">SURVIVOR ID CARD</span>
+        <h2 id="modal-name-title" class="modal-title">생존자 이름을 입력하세요</h2>
+        <p class="modal-sub">멤버들이 부를 당신의 이름입니다. (기본값: 모아)</p>
+        <input id="input-player-name" class="punk-input" type="text" maxlength="10" placeholder="모아" value="모아" autocomplete="off" />
+        <div class="modal-btn-row">
+          <button class="btn-punk btn-ghost" type="button" data-close="modal-name">취소</button>
+          <button id="btn-confirm-name" class="btn-punk btn-primary" type="button">학교로 들어가기 ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notebook (Affection & Character Profiles) Modal -->
+    <div id="modal-notebook" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-notebook-title">
+      <div class="modal-backdrop" data-close="modal-notebook"></div>
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <span class="tape-tag">SURVIVAL NOTE</span>
+            <h2 id="modal-notebook-title" class="modal-title">생존 팀원 &amp; 호감도</h2>
+          </div>
+          <button class="modal-close" type="button" data-close="modal-notebook">✕</button>
+        </div>
+        <div id="notebook-list" class="notebook-list"></div>
+      </div>
+    </div>
+
+    <!-- Backlog Modal -->
+    <div id="modal-backlog" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-backlog-title">
+      <div class="modal-backdrop" data-close="modal-backlog"></div>
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <span class="tape-tag">DIALOGUE LOG</span>
+            <h2 id="modal-backlog-title" class="modal-title">이전 대화 기록</h2>
+          </div>
+          <button class="modal-close" type="button" data-close="modal-backlog">✕</button>
+        </div>
+        <div id="backlog-list" class="backlog-list"></div>
+      </div>
+    </div>
+
+    <!-- Save / Load Modal -->
+    <div id="modal-save" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-save-title">
+      <div class="modal-backdrop" data-close="modal-save"></div>
+      <div class="modal-box">
+        <div class="modal-head">
+          <div>
+            <span class="tape-tag">MEMORY CARD</span>
+            <h2 id="modal-save-title" class="modal-title">저장 &amp; 불러오기</h2>
+          </div>
+          <button class="modal-close" type="button" data-close="modal-save">✕</button>
+        </div>
+        <div class="save-tabs">
+          <button id="tab-save" class="save-tab active" type="button">💾 저장하기</button>
+          <button id="tab-load" class="save-tab" type="button">📂 불러오기</button>
+        </div>
+        <div id="save-slots" class="save-slots"></div>
+      </div>
+    </div>
+
+    <!-- Polaroid Memory & Ending Gallery Modal -->
+    <div id="modal-gallery" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-gallery-title">
+      <div class="modal-backdrop" data-close="modal-gallery"></div>
+      <div class="modal-box modal-wide">
+        <div class="modal-head">
+          <div>
+            <span class="tape-tag">POLAROID ARCHIVE</span>
+            <h2 id="modal-gallery-title" class="modal-title">추억 폴라로이드 &amp; 엔딩 도감</h2>
+          </div>
+          <button class="modal-close" type="button" data-close="modal-gallery">✕</button>
+        </div>
+        <h3 class="gallery-section-title">📸 멤버 심야 폴라로이드 (불침번 이벤트로 해금)</h3>
+        <div id="gallery-polaroids" class="polaroid-grid"></div>
+        <h3 class="gallery-section-title">🏆 엔딩 컬렉션</h3>
+        <div id="gallery-endings" class="ending-badge-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data.js?v=20261125a"></script>
+  <script src="js/art.js?v=20261125a"></script>
+  <script src="js/story.js?v=20261125a"></script>
+  <script src="js/app.js?v=20261125a"></script>
+</body>
+</html>
